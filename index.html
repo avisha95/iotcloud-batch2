@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>IoTCloud Project</title>
+    <style>
+        /* ─── RESET & ROOT ─────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #d6e6f0;
+            --card: #ffffff;
+            --card-border: rgba(255, 255, 255, 0.85);
+            --shadow-sm: 0 1px 3px rgba(70, 110, 150, 0.08), 0 4px 12px rgba(70, 110, 150, 0.07);
+            --shadow-md: 0 4px 20px rgba(70, 110, 150, 0.13);
+            --border-subtle: rgba(150, 195, 225, 0.45);
+            --text-1: #18293d;
+            --text-2: #4e6e87;
+            --text-3: #8aaec5;
+            --blue: #2563eb;
+            --green: #16a34a;
+            --yellow: #d97706;
+            --red: #dc2626;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --gap: 16px;
+        }
+
+        /* ─── BASE ─────────────────────────────────────────────── */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            background: var(--bg);
+            color: var(--text-1);
+            min-height: 100vh;
+            background-image:
+                radial-gradient(ellipse at 15% 0%, rgba(190, 220, 242, 0.7) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 100%, rgba(175, 212, 238, 0.5) 0%, transparent 50%);
+        }
+
+        /* ─── NAVBAR OVERRIDE ──────────────────────────────────── */
+        .navbar {
+            background: linear-gradient(135deg, #1e40af 0%, #1d4ed8 100%) !important;
+            border-bottom: 1px solid rgba(37, 99, 235, 0.4) !important;
+            box-shadow: 0 2px 12px rgba(30, 64, 175, 0.25);
+            height: 58px;
+        }
+
+        .navbar-brand {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 17px !important;
+            font-weight: 800 !important;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-left: 8px;
+            box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.3);
+            animation: livePulse 2.2s ease-in-out infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.08);
+            }
+        }
+
+        /* ─── PAGE ─────────────────────────────────────────────── */
+        .page-wrap {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 20px 40px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-1);
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+        }
+
+        /* ─── CARD GRID ────────────────────────────────────────── */
+        .iot-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--gap);
+        }
+
+        /* ─── CARD BASE ────────────────────────────────────────── */
+        .iot-card {
+            background: var(--card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-sm);
+            padding: 22px 20px 20px;
+            transition: box-shadow 0.2s, transform 0.2s;
+            animation: slideUp 0.38s ease both;
+        }
+
+        .iot-card:nth-child(2) {
+            animation-delay: 0.08s;
+        }
+
+        .iot-card:nth-child(3) {
+            animation-delay: 0.16s;
+        }
+
+        .iot-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ─── CARD HEADER ──────────────────────────────────────── */
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .card-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-2);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+        }
+
+        /* ─── PILL ─────────────────────────────────────────────── */
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+            transition: background 0.3s;
+        }
+
+        .pill-normal {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .pill-warning {
+            background: var(--yellow);
+            color: #fff;
+        }
+
+        .pill-critical {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .pill-off {
+            background: var(--text-3);
+            color: #fff;
+        }
+
+        .pill-on {
+            background: var(--yellow);
+            color: #fff;
+        }
+
+        /* ─── DIVIDER ──────────────────────────────────────────── */
+        .divider {
+            height: 1px;
+            background: #f0f3f6;
+            margin: 14px 0;
+        }
+
+        /* ─── SUHU: THERMOMETER ────────────────────────────────── */
+        .thermo-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 6px 0 10px;
+        }
+
+        .thermo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .thermo-tube {
+            width: 14px;
+            height: 88px;
+            border-radius: 7px 7px 0 0;
+            background: #eef1f4;
+            border: 1.5px solid #d8dfe6;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .thermo-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+            border-radius: 5px 5px 0 0;
+            height: 0%;
+            transition: height 1.3s cubic-bezier(0.34, 1.3, 0.64, 1);
+        }
+
+        .thermo-bulb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #f87171, #dc2626);
+            border: 1.5px solid #d8dfe6;
+            margin-top: -1px;
+            box-shadow: 0 3px 8px rgba(220, 38, 38, 0.28);
+        }
+
+        .thermo-val {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--red);
+            line-height: 1;
+        }
+
+        .thermo-sub {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-3);
+            margin-top: 4px;
+        }
+
+        .sensor-note {
+            font-size: 10.5px;
+            color: var(--text-3);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .sensor-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: livePulse 2s ease-in-out infinite;
+        }
+
+        /* ─── KELEMBABAN: GAUGE ─────────────────────────────────── */
+        .gauge-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 0;
+        }
+
+        .gauge-val {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--blue);
+            line-height: 1;
+        }
+
+        .gauge-val span {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-2);
+        }
+
+        .gauge-lbl {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-3);
+        }
+
+        .humid-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: #eef1f4;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #d8dfe6;
+            margin: 6px 0 4px;
+        }
+
+        .humid-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #93c5fd 0%, #2563eb 100%);
+            width: 0%;
+            transition: width 1.2s cubic-bezier(0.34, 1.3, 0.64, 1);
+        }
+
+        /* ─── LAMPU: BUTTONS ────────────────────────────────────── */
+        .lamp-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0 4px;
+        }
+
+        .lamp-icon {
+            display: flex;
+            justify-content: center;
+        }
+
+        .lamp-status {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-3);
+            transition: color 0.3s;
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                filter: drop-shadow(0 0 4px rgba(217, 119, 6, 0.45));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 12px rgba(217, 119, 6, 0.85));
+            }
+        }
+
+        .lamp-on-anim {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .iot-btn {
+            flex: 1;
+            padding: 11px 0;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+        }
+
+        .iot-btn:hover {
+            opacity: 0.88;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .iot-btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-on {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .btn-off {
+            background: var(--red);
+            color: #fff;
+        }
+
+        /* ─── RESPONSIVE ────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .iot-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-wrap {
+                padding: 20px 14px 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .iot-grid {
+                gap: 12px;
+            }
+
+            .iot-card {
+                padding: 16px 14px 14px;
+            }
+
+            .thermo-val {
+                font-size: 28px;
+            }
+
+            .gauge-val {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ NAVBAR ════════════════════════════════════════════ -->
+    <nav class="navbar bg-primary border-bottom border-body" data-bs-theme="dark">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                IoT Cloud
+                <span class="live-dot"></span>
+            </span>
+        </div>
+    </nav>
+
+    <!-- ═══ MAIN CONTENT ══════════════════════════════════════ -->
+    <div class="page-wrap">
+        <h3 class="page-title">IoT Cloud</h3>
+
+        <div class="iot-grid">
+
+            <!-- ── Card Suhu ─────────────────────────────────────── -->
+            <div class="iot-card">
+                <div class="card-head">
+                    <span class="card-label">Suhu</span>
+                    <span class="pill pill-normal" id="suhu-pill">Normal</span>
+                </div>
+
+                <div class="thermo-section">
+                    <div class="thermo">
+                        <div class="thermo-tube">
+                            <div class="thermo-fill" id="thermoFill"></div>
+                        </div>
+                        <div class="thermo-bulb"></div>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="thermo-val" id="suhu">...</div>
+                        <div class="thermo-sub">Temperature</div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+                <div class="sensor-note">
+                    <div class="sensor-dot"></div>
+                    Sensor DHT22 · Live
+                </div>
+            </div>
+
+            <!-- ── Card Kelembaban ───────────────────────────────── -->
+            <div class="iot-card">
+                <div class="card-head">
+                    <span class="card-label">Kelembaban</span>
+                    <span class="pill pill-normal" id="humid-pill">Normal</span>
+                </div>
+
+                <div class="gauge-wrap">
+                    <!-- Half-arc gauge SVG -->
+                    <svg viewBox="0 0 130 76" width="130" height="76" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="hGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#93c5fd" />
+                                <stop offset="60%" stop-color="#2563eb" />
+                                <stop offset="100%" stop-color="#1d4ed8" />
+                            </linearGradient>
+                        </defs>
+                        <!-- track -->
+                        <path d="M12 65 A53 53 0 0 1 118 65" fill="none" stroke="#edf0f4" stroke-width="11" stroke-linecap="round" />
+                        <!-- fill arc -->
+                        <path d="M12 65 A53 53 0 0 1 118 65" fill="none" stroke="url(#hGrad)" stroke-width="11"
+                            stroke-linecap="round" stroke-dasharray="166" stroke-dashoffset="166" id="humidArc"
+                            style="transition:stroke-dashoffset 1.2s cubic-bezier(0.34,1.3,0.64,1);" />
+                        <!-- needle -->
+                        <line id="humidNeedle" x1="65" y1="65" x2="12" y2="65"
+                            stroke="#18293d" stroke-width="2.5" stroke-linecap="round"
+                            style="transition:x2 1.2s,y2 1.2s;" />
+                        <circle cx="65" cy="65" r="5" fill="#18293d" />
+                        <circle cx="65" cy="65" r="2.5" fill="#fff" />
+                    </svg>
+
+                    <div class="gauge-val"><span id="kelembaban">...</span></div>
+                    <div class="gauge-lbl">Humidity</div>
+                </div>
+
+                <div class="humid-bar-bg">
+                    <div class="humid-bar-fill" id="humidBar"></div>
+                </div>
+
+                <div class="divider"></div>
+                <div class="sensor-note">
+                    <div class="sensor-dot"></div>
+                    Sensor DHT22 · Live
+                </div>
+            </div>
+
+            <!-- ── Card Lampu ────────────────────────────────────── -->
+            <div class="iot-card">
+                <div class="card-head">
+                    <span class="card-label">Lampu</span>
+                    <span class="pill pill-off" id="lamp-pill">OFF</span>
+                </div>
+
+                <div class="lamp-center">
+                    <!-- Bulb SVG -->
+                    <div class="lamp-icon">
+                        <svg id="lampSvg" viewBox="0 0 64 80" width="72" height="72" xmlns="http://www.w3.org/2000/svg">
+                            <circle id="lampGlow" cx="32" cy="28" r="19" fill="#d8dfe6" />
+                            <path id="lampBody" d="M21 28 Q21 41 27.5 45 L36.5 45 Q43 41 43 28 A11 11 0 0 0 21 28Z" fill="#b8c8d8" />
+                            <rect id="lampBase1" x="27" y="45" width="10" height="4" rx="2" fill="#a0b4c8" />
+                            <rect id="lampBase2" x="26" y="49" width="12" height="3" rx="1.5" fill="#8aaec5" />
+                            <rect id="lampBase3" x="28" y="52" width="8" height="3" rx="1.5" fill="#8aaec5" />
+                        </svg>
+                    </div>
+
+                    <div class="lamp-status" id="lampStatus">Lampu Mati</div>
+
+                    <div class="divider" style="width:100%;margin:4px 0;"></div>
+
+                    <!-- Tombol ON / OFF — fungsi sama persis seperti aslinya -->
+                    <div class="btn-row">
+                        <button type="button" class="iot-btn btn-on" onclick="publish_led('1')">ON</button>
+                        <button type="button" class="iot-btn btn-off" onclick="publish_led('0')">OFF</button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /iot-grid -->
+    </div><!-- /page-wrap -->
+
+    <!-- ═══ FOOTER SCRIPTS ════════════════════════════════════ -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.6.1/mqtt.min.js" integrity="sha512-BKlu8PCUU/xLH/pNPkM3c440GXQ8Lr+EknLCmWsvXHLCJN5vqtFzprqbcL27SpXxI0m3iy4W2NQPx2HGBud9fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- ─── UI Controller ─────────────────────────────────── -->
+    <script>
+        (function() {
+
+            /* ── Suhu ─────────────────────────────────────────────── */
+            window.updateSuhu = function(val) {
+                const el = document.getElementById('suhu');
+                const fill = document.getElementById('thermoFill');
+                const pill = document.getElementById('suhu-pill');
+
+                const num = parseFloat(val);
+                if (isNaN(num)) {
+                    el.textContent = val;
+                    return;
+                }
+
+                el.textContent = num + '°C';
+
+                /* Thermometer fill: range 0–100°C */
+                const pct = Math.min(100, Math.max(0, num));
+                if (fill) fill.style.height = pct + '%';
+
+                /* Pill status */
+                if (num >= 70) {
+                    pill.className = 'pill pill-critical';
+                    pill.textContent = 'Critical';
+                } else if (num >= 55) {
+                    pill.className = 'pill pill-warning';
+                    pill.textContent = 'Warning';
+                } else {
+                    pill.className = 'pill pill-normal';
+                    pill.textContent = 'Normal';
+                }
+            };
+
+            /* ── Kelembaban ───────────────────────────────────────── */
+            window.updateKelembaban = function(val) {
+                const el = document.getElementById('kelembaban');
+                const arc = document.getElementById('humidArc');
+                const needle = document.getElementById('humidNeedle');
+                const bar = document.getElementById('humidBar');
+                const pill = document.getElementById('humid-pill');
+
+                const num = parseFloat(val);
+                if (isNaN(num)) {
+                    el.textContent = val;
+                    return;
+                }
+
+                el.textContent = num + '%';
+
+                /* Arc */
+                const pct = Math.min(100, Math.max(0, num));
+                const offset = 166 - (pct / 100) * 166;
+                if (arc) arc.setAttribute('stroke-dashoffset', offset.toFixed(1));
+
+                /* Needle: -90° (left) to +90° (right) mapped to 0–100% */
+                const angleDeg = -90 + (pct / 100) * 180;
+                const rad = angleDeg * Math.PI / 180;
+                const nx = 65 + 42 * Math.cos(rad);
+                const ny = 65 + 42 * Math.sin(rad);
+                if (needle) {
+                    needle.setAttribute('x2', nx.toFixed(1));
+                    needle.setAttribute('y2', ny.toFixed(1));
+                }
+
+                /* Progress bar */
+                if (bar) bar.style.width = pct + '%';
+
+                /* Pill status */
+                if (num >= 80) {
+                    pill.className = 'pill pill-warning';
+                    pill.textContent = 'Tinggi';
+                } else if (num <= 20) {
+                    pill.className = 'pill pill-warning';
+                    pill.textContent = 'Rendah';
+                } else {
+                    pill.className = 'pill pill-normal';
+                    pill.textContent = 'Normal';
+                }
+            };
+
+            /* ── Lampu ────────────────────────────────────────────── */
+            window.updateLamp = function(state) {
+                const pill = document.getElementById('lamp-pill');
+                const status = document.getElementById('lampStatus');
+                const glow = document.getElementById('lampGlow');
+                const body = document.getElementById('lampBody');
+                const b1 = document.getElementById('lampBase1');
+                const b2 = document.getElementById('lampBase2');
+                const b3 = document.getElementById('lampBase3');
+                const svg = document.getElementById('lampSvg');
+
+                if (state) {
+                    pill.className = 'pill pill-on';
+                    pill.textContent = 'ON';
+                    status.textContent = 'Lampu Menyala';
+                    status.style.color = 'var(--yellow)';
+                    glow.setAttribute('fill', '#fde68a');
+                    body.setAttribute('fill', '#fbbf24');
+                    b1.setAttribute('fill', '#f59e0b');
+                    b2.setAttribute('fill', '#d97706');
+                    b3.setAttribute('fill', '#d97706');
+                    svg.classList.add('lamp-on-anim');
+                } else {
+                    pill.className = 'pill pill-off';
+                    pill.textContent = 'OFF';
+                    status.textContent = 'Lampu Mati';
+                    status.style.color = 'var(--text-3)';
+                    glow.setAttribute('fill', '#d8dfe6');
+                    body.setAttribute('fill', '#b8c8d8');
+                    b1.setAttribute('fill', '#a0b4c8');
+                    b2.setAttribute('fill', '#8aaec5');
+                    b3.setAttribute('fill', '#8aaec5');
+                    svg.classList.remove('lamp-on-anim');
+                }
+            };
+
+            /* publish_led: dipanggil oleh tombol ON/OFF, sama persis seperti aslinya */
+            /* Fungsi ini akan di-override / didefinisikan oleh scripts.js dari MQTT  */
+            /* Fallback demo jika scripts.js belum tersedia:                           */
+            if (typeof window.publish_led === 'undefined') {
+                window.publish_led = function(val) {
+                    window.updateLamp(val === '1');
+                };
+            }
+
+            /* Inisialisasi tampilan awal setelah DOM siap */
+            document.addEventListener('DOMContentLoaded', function() {
+                /* Pastikan thermometer animasi dari bawah */
+                const fill = document.getElementById('thermoFill');
+                if (fill) {
+                    fill.style.height = '0%';
+                    requestAnimationFrame(function() {
+                        setTimeout(function() {
+                            /* Nilai awal placeholder — akan di-update oleh MQTT */
+                            updateSuhu('...');
+                            updateKelembaban('...');
+                        }, 200);
+                    });
+                }
+            });
+
+        })();
+    </script>
+
+    <script src="mqtt-library.js"></script>
+    <script src="scripts.js"></script>
+
+</body>
+
+</html>
